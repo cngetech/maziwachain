@@ -1,3 +1,5 @@
+'use client';
+
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 
 export default function Home() {
@@ -12,7 +14,8 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <p>Welcome to MaziwaChain, where transparency meets traceability in
-            the milk supply chain.</p>
+            the milk supply chain. Use the navigation links above to access
+            your specific dashboard.</p>
         </CardContent>
       </Card>
     </div>
