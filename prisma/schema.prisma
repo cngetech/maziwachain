@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  name        String
+  role        Role
+  contact     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  milkDeliveries MilkDelivery[]
+  payments Payment[]
+}
+
+enum Role {
+  MilkMan
+  MilkShop
+  Admin
+}
+
+model MilkDelivery {
+  id String @id @default(uuid())
+  milkMan   User @relation(fields: [milkManId], references: [id])
+  milkManId String
+  shopId    String
+  liters    Float
+  price     Float
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sales Sales[]
+  shop Shop @relation(fields: [shopId], references: [id])
+}
+
+model Shop {
+  id String @id @default(uuid())
+  name String
+  contact String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  milkDeliveries MilkDelivery[]
+  sales Sales[]
+}
+
+model Sales {
+  id String @id @default(uuid())
+  shop Shop @relation(fields: [shopId], references: [id])
+  shopId String
+  customer Customer @relation(fields: [customerId], references: [id])
+  customerId String
+  milkDelivery MilkDelivery @relation(fields: [milkDeliveryId], references: [id])
+  milkDeliveryId String
+  liters Float
+  paymentMode PaymentMode
+  date DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PaymentMode {
+  Cash
+  Credit
+  MPESA
+}
+
+model Customer {
+  id String @id @default(uuid())
+  name String
+  phone String
+  creditLimit Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sales Sales[]
+}
+
+model Payment {
+  id String @id @default(uuid())
+  milkMan User @relation(fields: [milkManId], references: [id])
+  milkManId String
+  amount Float
+  status PaymentStatus
+  date DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum PaymentStatus {
+  Pending
+  Completed
+  Failed
+}
